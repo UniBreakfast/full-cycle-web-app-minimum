@@ -1,6 +1,6 @@
 const { createServer } = require("http");
 const { readFileSync } = require("fs");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://fcwam-admin:Vnh4xrqJf4xBsfZM@cluster0.x0yir.gcp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 main();
@@ -15,6 +15,10 @@ async function addItem(collection, name) {
   const item = { name };
 
   await collection.insertOne(item);
+}
+
+async function deleteItem(collection, id='') {
+  await collection.deleteOne({ _id: new ObjectId(id) });
 }
 
 async function getItems(collection) {
@@ -59,6 +63,19 @@ function handleRequest(collection) {
 
       return;
     }
+
+    if (request.url === '/delete') {
+      const body = await getBody(request);
+      const id = body.split('=')[1];
+
+      await deleteItem(collection, id);
+      
+      const items = await getItems(collection);
+
+      response.end(JSON.stringify(items));
+
+      return;
+    }
       
     if (request.url === '/items') {
       const items = await getItems(collection);
@@ -69,7 +86,7 @@ function handleRequest(collection) {
     }
 
     try {
-      const path = '.' + request.url;
+      const path = 'public' + request.url;
       const html = readFileSync(path);
 
       response.end(html);
