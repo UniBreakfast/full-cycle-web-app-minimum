@@ -1,0 +1,15 @@
+{
+  "name": "full-cycle-web-app-minimum",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "keywords": [],
+  "author": "UniBreakfast",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mongodb": "^6.8.0"
+  }
+}
